@@ -1,0 +1,78 @@
+extends index
+
+block breadcrumbs
+  li: a(href="{%funcs::GetAdminUrl('商品列表')%}") 商品列表
+
+
+block main
+  .row
+    {%foreach from=$channel key=count item=i%}
+    {%if $i.parentid eq 0%}
+    a.button(href='?admin=admin&template=article_list&channelid={%$i.id%}') {%$i.name%}
+    {%/if%}
+    {%/foreach%}
+  .row.table-responsive
+    table.table.table-hover
+      thead
+        tr
+          td 编辑
+          td 频道
+          td 标题
+          td 作者
+          td 时间
+          td 浏览次数
+          td 操作
+      tbody
+        {%if funcs::GET("channelid") gt 0%}
+        {%$goodlist = funcs::GetGoodListByChannel(funcs::GET("channelid"))%}
+        {%else%}
+        {%$goodlist = funcs::GetGoodListByChannel(0)%}
+        {%/if%}
+        {%foreach from=$goodlist key=count item=i%}
+        tr
+          td: a(href="?admin=admin&template=good_edit&id={%$i.id%}") 编辑
+          td {%funcs::ChannelName($i.channelid)%}
+          td
+            a(href="{%$weburl%}?template=article&id={%$i.id%}",target="_blank") {%$i.title%}
+          td {%$i.time%}
+          td {%$i.times%}
+          td
+            span.btn.btn-primary.article_top(articleid="{%$i.id%}") {%if $i.top eq 0%}顶置{%else%}取消顶置{%/if%}
+            span.btn.btn-success.article_delete(articleid="{%$i.id%}") 删除
+        {%/foreach%}
+  {%$page%}
+
+block script
+  script(type="text/javascript")
+    $(function(){
+      $(".article_top").click(function(){
+        var that = $(this);
+        $.post("{%$adminurl%}",{
+          "method":"article_top",
+          "article_id":that.attr("articleid")
+        },function(data){
+          try{
+            data = $.parseJSON(data);
+            alert(data.msg);
+          }catch(err){
+            alert("出错了！");
+          }
+          history.go(0);
+        })
+      });
+      $(".article_delete").click(function(){
+        var that = $(this);
+        $.post("{%$adminurl%}",{
+          "method":"article_delete",
+          "article_id":that.attr("articleid")
+        },function(data){
+          try{
+            data = $.parseJSON(data);
+            alert(data.msg);
+          }catch(err){
+            alert("出错了！");
+          }
+          history.go(0);
+        })
+      });
+    });

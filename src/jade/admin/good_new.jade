@@ -1,0 +1,69 @@
+extends index
+
+block breadcrumb
+  li: a(href="{%funcs::GetAdminUrl('商品管理')%}") 商品管理
+  li: a(href="{%funcs::GetAdminUrl('添加商品')%}") 添加商品
+
+
+block main
+  form.form-horizontal(role='form',name='good_new', method='POST', action='{%$adminurl%}')
+    input(type='hidden', name='method', value='good_new')
+    div
+      .form-group
+        label.col-sm-2.control-label(for="channel") 选择类别:
+        .col-sm-10
+          select.form-control(name='channel')
+            option(value="") 请选择类别
+            {%foreach from=$channel key=count item=i%}
+            {%if $i.type eq 0 %}
+            {%if $i.parentid eq 0%}
+            option(value='{%$i.id%}') {%$i.name%}
+            {%else%}
+            option(value='{%$i.id%}') ----{%$i.name%}
+            {%/if%}
+            {%/if%}
+            {%/foreach%}
+            span.msg 请选择类别
+      .form-group
+        label.col-sm-2.control-label(for="link") 商品链接:
+        .col-sm-10
+          input.form-control(type='text',id='link',name='link', data-rule='{"maxlength":100,number:true}',value="{%$article.author%}")
+          span.msg
+      .form-group
+        label.col-sm-2.control-label(for="good-title") 商品名称:
+        .col-sm-10
+          input.form-control(type='text',id='good-title',name='title',size='20',data-rule='"require":true,"maxlength":30',value="{%$article.title%}")
+          span.msg 最多输入30个文字
+      .form-group
+        label.col-sm-2.control-label(for="good-img") 图片链接:
+        .col-sm-10
+          input.form-control(type='text',id='good-img',name='good-img', data-rule='"maxlength":10',value="{%$article.author%}")
+          span.msg
+
+
+      .form-group
+        label.col-sm-2.control-label(for="price") 现价:
+        .col-sm-10
+          input.form-control(type='text',id='price',name='price', data-rule='{"maxlength":10,number:true}',value="{%$article.author%}")
+          span.msg
+
+      .form-group
+        label.col-sm-2.control-label(for="price_old") 原价:
+        .col-sm-10
+          input.form-control(type='text',id='price_old',name='price_old', data-rule='{"maxlength":10,number:true}',value="{%$article.author%}")
+          span.msg
+
+      .form-group
+        label.col-sm-2.control-label(for="endtime") 结束时间:
+        .col-sm-10
+          input.form-control(type='text',id='endtime',name='endtime', data-rule='{"maxlength":10,number:true}',value="{%$article.author%}")
+          span.msg
+
+      .form-group
+        input.btn.form-control(type='submit', val='提交')
+
+block script
+  script(type='text/javascript')
+    $(function(){
+      common.validate_form($("form[name=good_new]"));
+    });

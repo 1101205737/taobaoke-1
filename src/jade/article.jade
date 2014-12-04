@@ -1,0 +1,30 @@
+extends include/layout
+
+block main
+	.sub-menu {%$article=funcs::GetArticle(funcs::GET("id"))%}
+		ul
+			{%$channels = funcs::ChannelSibling($article.channel)%}
+			{%foreach from=$channels key=count item=channel%}
+			li: a(href="?template=list&channelid={%$channel.id%}") {%$channel.name%}
+			{%/foreach%}
+	.main.article
+		//标题
+		h2.article_title
+			{%$article.title%}
+		//文章路径
+		.article_path 您的位置：
+			{%foreach from=funcs::ChannelPath($article.channel) key=count item=i%}
+			{%if $i.type eq 1%}
+			a(href="{%$i.link%}") {%$i.name%}/
+			{%else%}
+			a(href="?template=list&channelid={%$i.id%}") {%$i.name%}/
+			{%/if%}
+			{%/foreach%}
+		hr
+		//文章内容
+		.article_content
+			{%$article.content%}
+		//作者
+		.article_author {%$article.author%}
+		//浏览次数
+		.article_viewtimes {%$article.times%}

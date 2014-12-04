@@ -1,0 +1,59 @@
+extends index
+
+block breadcrumbs
+  li: a(href="{%funcs::GetAdminUrl('系统设置')%}") 系统设置
+
+block main
+  .list
+    .row.line
+      .columns.large-2 关键字
+      .columns.large-4 值
+      .columns.large-3 操作
+
+    .row.line
+      form(method="post",action="{%$adminurl%}")
+        .columns.large-2
+          input(type="text",name="keyname",value="")
+        .columns.large-4
+          input(type="text",name="value",value="")
+        .columns.large-3
+          span.button.new_system(method="new_system") 新建
+
+    {%foreach from=$system key=keyname item=val%}
+    .row.line
+      form(method="post",action="{%$adminurl%}")
+        .columns.large-2
+          input(type="text",name="keyname",value="{%$keyname%}")
+        .columns.large-4
+          input(type="text",name="value",value="{%$val%}")
+        .columns.large-3
+          span.button.change_system(systemkey="{%$keyname%}",method="change_system") 修改
+          span.button.delete_system(systemkey="{%$keyname%}",method="delete_system") 删除
+    {%/foreach%}
+  {%$page%}
+
+block script
+  script(type='text/javascript')
+    $(function(){
+      $(".new_system,.change_system,.delete_system").click(function(){
+        var that = $(this);
+        var p = that.parent().parent();
+        $.post("{%$adminurl%}",{
+          "method":that.attr("method"),
+          "systemkey":that.attr("systemkey"),
+          "keyname":p.find("[name=keyname]").val(),
+          "value":p.find("[name=value]").val()
+        },function(data){
+          try{
+            data = $.parseJSON(data);
+            alert(data.msg);
+            if(data.ret == 0){
+              history.go(0);
+            }
+          }catch(err){
+            alert("出错了！");
+          }
+          
+        })
+      });
+    });

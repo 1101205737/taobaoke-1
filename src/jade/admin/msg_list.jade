@@ -1,0 +1,29 @@
+extends index
+
+block breadcrumbs
+  li: a(href="#") 文章管理
+
+block main
+  .list
+    .row
+      .columns.large-1 编辑
+      .columns.large-2 时间
+      .columns.large-5 标题
+      .columns.large-1 作者
+      .columns.large-1 顶置
+      .columns.large-1 审核
+      .columns.large-1 删除
+    {%foreach from=$article_list key=count item=i%}
+    .row
+      .columns.large-1: a(href="?method=article_edit&key={%$i.id%}") 编辑
+      .columns.large-2 {%$i.time%}
+      .columns.large-5 {%$i.title%}
+      .columns.large-1 {%$i.author%}
+      .columns.large-1 顶置
+      .columns.large-1 审核
+      .columns.large-1: a(href="?method=delete&key={%$i.id%}") 删除
+    {%/foreach%}
+    ul
+      {%foreach from=$items key=myId item=i%}
+      li: a(href="http://blog.163.com/lgh_2002/blog/item.php?id={%$myId%}") {%$i.no%}: {%$i.label%}
+      {%/foreach%}

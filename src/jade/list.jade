@@ -1,0 +1,22 @@
+extends include/layout
+block style
+	style
+		.main img{
+			width:auto;
+		}
+block main
+	.sub-menu
+		ul
+			{%foreach from=funcs::ChannelChild(funcs::GET("channelid")) key=count item=i%}
+			li: a(href="?template=list&channelid={%$i.id%}") {%$i.name%}
+			{%/foreach%}
+	.main
+		ul
+			{%foreach from=funcs::GetArticleListByChannel(funcs::GET("channelid")) key=count item=article%}
+			li
+				img(src="./img/listpoint.gif")
+				span [
+				a.channel(href="?template=list&channelid={%$article.channel%}") {%funcs::ChannelName($article.channel)%}
+				span ]
+				a.article(href="?template=article&id={%$article.id%}") {%$article.title%}
+			{%/foreach%}

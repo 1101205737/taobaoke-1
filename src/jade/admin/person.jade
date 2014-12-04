@@ -1,0 +1,43 @@
+extends index
+
+block style
+  style
+    .row .row{
+      margin: 0;
+    }
+    .login-form{
+      max-width:600px;
+      border:1px solid gray;
+      border-radius: 10px;
+      margin: 10px auto;
+      padding: 10px;
+    }
+
+
+block main
+  form.login-form(action="{%$adminurl%}",method="post")
+    {%$userinfo = funcs::GetUserInfo()%}
+    input(type="hidden",name="method",value="change_userinfo")
+    .row 修改密码：
+    .row 用户名
+    .row
+      input(type="text",name="username",value="{%$userinfo.username%}")
+    .row 真实姓名
+    .row
+      input(type="text",name="realname",value="{%$userinfo.realname%}")
+    .row 邮箱
+    .row
+      input(type="text",name="email",value="{%$userinfo.email%}")
+    .row 旧密码：
+    .row
+      input(type="password",name="old_password")
+    .row 新密码：(不修改密码留空)
+    .row
+      input(type="password",name="new_password")
+    .row 重复新密码：(不修改密码留空)
+    .row
+      input(type="password",name="repeat_password")
+    .row
+      input(type="submit",value="提交")
+block script
+  script(type='text/javascript')

@@ -1,0 +1,29 @@
+extends include/layout
+
+block main
+	div(style="background-color:red")测试页面
+	p 取得频道名称:{%funcs::ChannelName(1)%}
+	hr
+	p 取得频道路径:
+		{%foreach from=funcs::ChannelPath(1) key=count item=i%}
+		a(href="{%$i.link%}") {%$i.name%}
+		{%/foreach%}
+	hr
+	p 取得文章内容:
+		{%$article=funcs::GetArticle(34)%}
+	p	文章名称：{%$article.title%}
+	div	频道路径：
+		{%foreach from=funcs::ChannelPath($article.channel) key=count item=i%}
+		a(href="{%$i.link%}") {%$i.name%}
+		{%/foreach%}
+	div	文章内容{%$article.content%}
+	div	文章作者{%$article.author%}
+	div	文章属性{%$article.top%}
+	hr
+	p 取得文章列表:
+		ul
+			{%foreach from=funcs::GetArticleListByChannel(2) key=count item=article%}
+			li 
+				a.channel(href="?template=channel_list&id={%$article.channel%}") {%funcs::ChannelName($article.channel)%}
+				a.article(href="?template=article&id={%$article.id%}") {%$article.title%}
+			{%/foreach%}

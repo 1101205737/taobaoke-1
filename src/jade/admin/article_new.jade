@@ -1,0 +1,120 @@
+extends index
+
+block breadcrumbs
+  li: a(href="{%funcs::GetAdminUrl('文章管理')%}") 文章管理
+  li: a(href="{%funcs::GetAdminUrl('添加文章')%}") 添加文章
+
+
+block main
+  form(name='article_new', method='POST', action='{%$weburl%}{%$adminurl%}')
+    input(type='hidden', name='method', value='article_new')
+    div
+      .list
+        label.info 选择频道:
+        .field
+          select(name='channel')
+            option(value="") 请选择频道
+            {%foreach from=$channel key=count item=i%}
+            {%if $i.type eq 0 %}
+            {%if $i.parentid eq 0%}
+            option(value='{%$i.id%}') {%$i.name%}
+            {%else%}
+            option(value='{%$i.id%}') ----{%$i.name%}
+            {%/if%}
+            {%/if%}
+            {%/foreach%}
+          span.msg
+        .clear
+      .list
+        label.info 文章名称:
+        .field
+          input(type='text', name='title',size='20',data-rule='"require":true,"maxlength":20',value="{%$article.title%}")
+          span.msg
+        .clear
+      .list
+        label.info 文章作者:
+        .field
+          input(type='text',name='author', data-rule='"maxlength":10',value="{%$article.author%}")
+          span.msg
+        .clear
+      //
+        .list
+          label.info 关键字:
+          .field
+            input(type='text',name='keywords', data-rule='"require":true,"maxlength":20',value="{%$article.keywords%}")
+            span.msg
+          .clear
+      .list
+        label.info 相关链接:
+        .field
+          input(type='text',name='link', data-rule='"require":true,"maxlength":50',value="{%$article.link%}")
+          span.msg
+        .clear
+      .list
+        label.info 文章内容:
+        .field
+          textarea#content(name='content', size='3000', value='', accept='.swf', data-rule='"require":true',value="{%$article.content%}")
+          span.msg
+        .clear
+      .list
+        label.info 首页图片:
+        .field
+          select(name='img',value='{%$article.img%}')
+            option(value="") 请选择图片
+          span.msg
+          img.firstImg(width="200px",height="100px",src="{%$article.img%}")
+        .clear
+      .list
+        label.info 文章属性:
+        .field
+          span 顶置
+          input(type="checkbox",name="top",value="1")
+          span.msg
+        .clear
+      .list
+        label.info 文章状态：
+        .field
+          input(type="radio",name="stage",value="2",checked="true")
+          label 发布
+          input(type="radio",name="stage",value="1")
+          label 待审
+          input(type="radio",name="stage",value="0")
+          label 草稿
+          span.msg 
+      .list
+        label.info
+        .field
+          input.btn(type='submit', val='提交')
+        .clear
+
+block script
+  script(type='text/javascript')
+    $(function(){
+      var um = UM.getEditor('content');
+      um.addListener("ready afterExecCommand",function(){
+        var html = um.getAllHtml();
+        var imgs = [];
+        $("[name=img]").find("option").each(function(){
+          imgs.push($(this).attr("value"));
+        });
+        html.replace(/<img\s+src="([^"]*)"/g,function(a,b){
+          var url = b;
+          url = url.replace(myapp.root,"");
+          if(url === b || imgs.indexOf(url)>=0){
+            return;
+          }
+          imgs.push(url);
+          $("[name=img]").append("<option value='"+url+"'>"+url+"</option>");
+        });
+      });
+      um.fireEvent("ready");
+      $("[name=img]").change(function(){
+        var that = $(this);
+        var val = that.val();
+        if(val){
+          $(".firstImg").attr("src",val).show();
+        }else{
+          $(".firstImg").hide();
+        }
+      });
+    });

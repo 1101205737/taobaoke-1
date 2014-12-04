@@ -1,0 +1,51 @@
+extends include/layout
+
+block main
+  .row
+    {%$goodlist = funcs::GetGoodListByChannel(0)%}
+    {%foreach from=$goodlist key=count item=i%}
+    .col-lg-3.col-md-3.col-sm-3
+      .good
+        .good-pic
+          a(href="#")
+            img(alt="{%$i.title%}",src="{%$i.img%}",style="display: inline;")
+            span 今日<br />新品
+        .good-title [包邮]
+          a(href="#") {%$i.title%}
+        .good-price
+          span.price-current ￥{%$i.price%}
+          span.price-old ￥{%$i.price_old%}
+          span.btn
+            a(href="{%$i.link%}")
+              span 购买
+    {%/foreach%}   
+    .col-lg-3.col-md-3.col-sm-3
+      .good
+        .good-pic
+          a(href="#")
+            img(alt="竹小宝竹纤维宝宝巾3条装",width="100%",src="http://s1.juancdn.com/bao/141128/2/8/5477e38ede2dc_310x310.jpg_310x310.jpg",d-src="http://s1.juancdn.com/bao/141128/2/8/5477e38ede2dc_310x310.jpg_310x310.jpg",style="display: inline;")
+            span 今日<br />新品  
+        .good-title [包邮]
+          a(href="#") 商品名称
+        .good-price
+          span.price-current ￥55
+          span.price-old ￥100
+          span.btn
+            a(href="#")
+              span 购买
+    .col-lg-3.col-md-3.col-sm-3
+      .good
+        .good-pic
+          a(href="#")
+            img(alt="竹小宝竹纤维宝宝巾3条装",width="100%",src="http://s1.juancdn.com/bao/141128/2/8/5477e38ede2dc_310x310.jpg_310x310.jpg",d-src="http://s1.juancdn.com/bao/141128/2/8/5477e38ede2dc_310x310.jpg_310x310.jpg",style="display: inline;")
+            span 今日<br />新品  
+        .good-title [包邮]
+          a(href="#") 商品名称
+        .good-price
+          span.price-current ￥55
+          span.price-old ￥100
+          span.btn
+            a(href="#")
+              span 购买
+
+

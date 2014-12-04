@@ -1,0 +1,83 @@
+extends index
+
+block breadcrumbs
+  li: a(href="#") 栏目管理
+
+//类型：
+    链接
+    栏目：可否添加文章
+    子栏目
+
+
+block main
+  .list
+    .row.line
+      .columns.large-1 用户编号
+      .columns.large-1 用户类型
+      .columns.large-1 用户名
+      .columns.large-1 邮箱
+      .columns.large-1 真实姓名
+      .columns.large-1 登录次数
+      .columns.large-2 最后登录时间
+      .columns.large-3 操作
+    .row.line
+      form(action="{%$weburl%}{%$adminurl%}",method="POST")
+        input(type="hidden",name="method",value="user_new")
+        .columns.large-1
+          自动
+        .columns.large-1
+          select(name="usertype")
+            option(value="admin") 管理员
+            option(value="") 普通用户
+        .columns.large-1
+          input(type="text",name="username",placeholder="请输入")
+        .columns.large-1
+          input(type="text",name="email",placeholder="请输入")
+        .columns.large-1
+          input(type="text",name="realname",placeholder="请输入")
+        .columns.large-2
+        .columns.large-3
+          button(type="submit") 新建
+    {%foreach from=funcs::GetUserList() key=count item=i%}
+    .row.line
+      form(method="post",action="{%$weburl%}{%$adminurl%}")
+        input(type="hidden",name="method",value="user_edit")
+        input(type="hidden",name="userid",value="{%$i.userid%}")
+        .columns.large-1 {%$i.userid%}
+        .columns.large-1
+          select(name="usertype",value="{%$i.usertype%}")
+            option(value="admin") 管理员
+            option(value="") 普通用户
+        .columns.large-1
+          input(type="text",name="username",value="{%$i.username%}")
+        .columns.large-1
+          input(type="text",name="email",value="{%$i.email%}")
+        .columns.large-1
+          input(type="text",name="realname",value="{%$i.realname%}")
+        .columns.large-1
+          input(type="text",name="logintimes",value="{%$i.logintimes%}")
+        .columns.large-2 {%$i.logintime%}
+        .columns.large-3
+          button(type="submit",value="确定修改") 确定修改
+          button.resetpassword(type="button",value="确定修改",userid="{%$i.userid%}") 重置密码
+    {%/foreach%}
+
+block script
+  script(type='text/javascript')
+    $(function(){
+      $(".resetpassword").click(function(){
+        var that = $(this);
+        $.post("{%$adminurl%}",{
+          "method":"resetpassword",
+          "userid":that.attr("userid")
+        },function(data){
+          try{
+            data = $.parseJSON(data);
+            alert(data.msg);
+          }catch(err){
+            alert("出错了！");
+          }
+          history.go(0);
+        })
+      });
+    });

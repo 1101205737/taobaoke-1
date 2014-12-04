@@ -1,0 +1,89 @@
+extends index
+
+block breadcrumbss
+  li: a(href="{%funcs::GetAdminUrl('频道管理')%}") 频道管理
+
+//类型：
+    链接
+    栏目：可否添加文章
+    子栏目
+
+
+block main
+  .list
+    .row
+      .columns.large-1 父编号
+      .columns.large-1 编号
+      .columns.large-1 名称
+      .columns.large-1 类型
+      .columns.large-2 链接
+      .columns.large-2 页面模板
+      .columns.large-2 列表模板
+      .columns.large-2 操作
+    .row
+      form(action="{%$weburl%}{%$adminurl%}",method="POST")
+        input(type="hidden",name="method",value="channel_new")
+        .columns.large-1
+          input(type="text",name="parentid",placeholder="请输入",value="0")
+        .columns.large-1
+          自动
+          //input(type="text",name="id",placeholder="不填写则自动获取",value="")
+        .columns.large-1
+          input(type="text",name="name",placeholder="请输入名称")
+        .columns.large-1
+          select(name="type")
+            option(value="0") 栏目
+            option(value="1") 链接
+        .columns.large-2
+          input(type="text",name="link",placeholder="请输入",value="")
+        .columns.large-2
+          input(type="text",name="template",placeholder="请输入")
+        .columns.large-2
+          input(type="text",name="template_list",placeholder="请输入")
+        .columns.large-2
+          button(type="submit") 新建
+    {%foreach from=$channel key=count item=i%}
+    .row
+      form(method="post",action="{%$weburl%}{%$adminurl%}")
+        input(type="hidden",name="method",value="channel_edit")
+        input(type="hidden",name="id",value="{%$i.id%}")
+        .columns.large-1
+          input(type="text",name="parentid",value="{%$i.parentid%}")
+        .columns.large-1
+          input(type="text",name="new_id",value="{%$i.id%}")
+        .columns.large-1
+          input(type="text",name="name",value="{%$i.name%}")
+        .columns.large-1
+          select(name="type",value="{%$i.type%}")
+            option(value="0") 栏目
+            option(value="1") 链接
+        .columns.large-2
+          input(type="text",name="link",placeholder="请输入",value="{%$i.link%}")
+        .columns.large-2
+          input(type="text",name="template",placeholder="请输入",value="{%$i.template%}")
+        .columns.large-2
+          input(type="text",name="template_list",placeholder="请输入",value="{%$i.template_list%}")
+        .columns.large-2
+          button(type="submit",value="确定") 确定
+          button.channel_delete(type="button",value="删除",channelid="{%$i.id%}") 删除
+    {%/foreach%}
+
+block script
+  script(type="text/javascript")
+    $(function(){
+      $(".channel_delete").click(function(){
+        var that = $(this);
+        $.post("{%$adminurl%}",{
+          "method":"channel_delete",
+          "channel_id":that.attr("channelid")
+        },function(data){
+          try{
+            data = $.parseJSON(data);
+            alert(data.msg);
+          }catch(err){
+            alert("出错了！");
+          }
+          history.go(0);
+        })
+      });
+    });

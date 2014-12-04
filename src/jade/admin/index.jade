@@ -1,0 +1,70 @@
+doctype html
+html(lang='zh-cn')
+  head
+    meta(charset='UTF-8')
+    title {%$adminname%}
+    meta(name='viewport', content='width=device-width')
+    meta(name='keywords', content='{%$keywords%}')
+    meta(name='description', content='description')
+    link(href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css",rel="stylesheet")
+    link(rel='stylesheet', href='{%$weburl%}css/mcms.css')
+    script(type='text/javascript', src='http://219.139.52.150/js/jquery/jquery-1.11.1.min.js')
+    script(type='text/javascript', src='{%$weburl%}src/js/common.js')
+    script(type='text/javascript', src='{%$weburl%}src/js/myapp.js')
+    script(src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js")
+    //
+      link(href='{%$weburl%}umeditor/themes/default/css/umeditor.css', type='text/css', rel='stylesheet')
+      script(type='text/javascript', src='{%$weburl%}umeditor/umeditor.config.js')
+      script(type='text/javascript', src='{%$weburl%}umeditor/umeditor.min.js')
+      script(type='text/javascript', src='{%$weburl%}umeditor/lang/zh-cn/zh-cn.js')
+    block style
+
+  body
+    .header.row
+      .col-lg-8.col-md-8
+        ul.nav.nav-tabs(role="tablist")
+          li: a(href='index.php?admin=admin') {%$sitename%}
+          {%foreach from=$AdminUrl item=url%}
+          {%if $url.parentid eq 0%}
+          li: a(href='{%$url.url%}') {%$url.name%}
+          {%/if%}
+          {%/foreach%}
+        // Right Nav Section
+      .col-lg-1.col-md-1.col-sm-2
+        ul.nav.nav-tabs(role="tablist")
+          li: a(href='#') 登陆和退出
+    .row
+      .col-lg-2.col-sm-12.col-md-2
+        block nav
+          ul.list-group
+            {%foreach from=$AdminUrl item=url%}
+            {%if $url.parentid eq 0%}
+            li.list-group-item: a(href='{%$url.url%}') {%$url.name%}
+            {%else%}
+            ul.side-nav
+              li: a(href='{%$url.url%}') {%$url.name%}
+            {%/if%}
+            {%/foreach%}
+      .col-lg-10.col-sm-12.col-md-10
+        ol.breadcrumb
+          li: a(href="{%$adminurl%}") 后台管理
+          block breadcrumb
+
+        block main
+          h2 小巧的内容管理系统
+          div 主要功能：
+          ul
+            li 频道管理:添加频道及子频道
+            li 文章管理:添加文章，删除文章，修改文章，修改文章属性
+            li 用户管理:添加用户，删除用户，修改用户属性，重置密码
+            li 留言管理
+    .row.footer
+      ul
+        li: a(href="#") 关于我们
+        li: a(href="#") 联系我们
+        li: a(href="#") 网站地图
+        li: a(href="#") 意见反馈
+     .row.footer 
+       .copyright 母志龙 版权所有
+    block script
+      script(type='text/javascript')
